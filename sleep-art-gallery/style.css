@@ -1,0 +1,1113 @@
+/* ============================================
+   Sleep Art Gallery - スタイルシート
+
+   セクション構成:
+   1. リセット & CSS変数
+   2. 基本レイアウト
+   3. ナビゲーション
+   4. ホーム画面
+   5. 睡眠ボタン
+   6. 統計カード
+   7. 今日のアート
+   8. ギャラリー / カレンダー
+   9. 実績画面
+   10. モーダル
+   11. トースト通知
+   12. アニメーション
+   13. レスポンシブ
+   ============================================ */
+
+/* ============================================
+   1. リセット & CSS変数
+   ============================================ */
+
+/* ダーク基調のカラーパレット（睡眠テーマにぴったり） */
+:root {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-card: #1a2035;
+  --bg-card-hover: #222b45;
+  --text-primary: #e8ecf4;
+  --text-secondary: #8b95a8;
+  --text-muted: #5a6478;
+  --accent-blue: #6366f1;
+  --accent-purple: #8b5cf6;
+  --accent-pink: #ec4899;
+  --accent-cyan: #06b6d4;
+  --accent-amber: #f59e0b;
+  --accent-green: #10b981;
+  --border-color: #1e293b;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --gradient-sleep: linear-gradient(135deg, #6366f1, #8b5cf6);
+  --gradient-wake: linear-gradient(135deg, #f59e0b, #f97316);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* リセット */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ============================================
+   2. 基本レイアウト
+   ============================================ */
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* 背景にほんのり星空のような効果 */
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 80px 20px 40px;
+}
+
+/* ビューの切り替え（表示/非表示） */
+.view {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+.view.active {
+  display: block;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ============================================
+   3. ナビゲーション
+   ============================================ */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  height: 60px;
+  background: rgba(10, 14, 26, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-icon {
+  font-size: 1.4rem;
+}
+
+.nav-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: var(--gradient-sleep);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-links {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--font-family);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.nav-btn:hover {
+  color: var(--text-primary);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.nav-btn.active {
+  color: var(--accent-blue);
+  background: rgba(99, 102, 241, 0.15);
+}
+
+/* ============================================
+   4. ホーム画面
+   ============================================ */
+
+/* 時計表示 */
+.status-card {
+  text-align: center;
+  padding: 40px 20px 20px;
+}
+
+.clock {
+  font-size: 4rem;
+  font-weight: 300;
+  letter-spacing: 4px;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.status-message {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-top: 8px;
+  font-weight: 300;
+}
+
+/* ============================================
+   5. 睡眠ボタン
+   ============================================ */
+.sleep-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 160px;
+  border: none;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  font-family: var(--font-family);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xl);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.btn:hover::before {
+  opacity: 1;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+/* おやすみボタン */
+.btn-sleep {
+  background: var(--gradient-sleep);
+  color: white;
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+}
+
+.btn-sleep::before {
+  background: linear-gradient(135deg, #818cf8, #a78bfa);
+}
+
+.btn-sleep:hover {
+  box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+}
+
+/* おはようボタン */
+.btn-wake {
+  background: var(--gradient-wake);
+  color: white;
+  box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
+}
+
+.btn-wake::before {
+  background: linear-gradient(135deg, #fbbf24, #fb923c);
+}
+
+.btn-wake:hover:not(:disabled) {
+  box-shadow: 0 12px 40px rgba(245, 158, 11, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ボタン無効時のスタイル */
+.btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-icon {
+  font-size: 2.5rem;
+  margin-bottom: 4px;
+}
+
+.btn-text {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.btn-sub {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+/* 就寝中の情報表示 */
+.sleeping-info {
+  text-align: center;
+  padding: 24px;
+  margin: 0 auto;
+  max-width: 400px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.sleeping-label {
+  font-size: 1.1rem;
+  color: var(--accent-purple);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.sleeping-since {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.sleeping-elapsed {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-top: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================
+   5.5. アラーム機能
+   ============================================ */
+
+/* --- アラーム設定パネル --- */
+.alarm-panel {
+  max-width: 360px;
+  margin: 0 auto 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.alarm-panel-inner {
+  background: var(--bg-card);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.alarm-panel-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--accent-cyan);
+}
+
+.alarm-panel-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+/* 時刻入力フィールド */
+.alarm-time-input {
+  font-family: var(--font-family);
+  font-size: 2.2rem;
+  font-weight: 300;
+  text-align: center;
+  width: 180px;
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  outline: none;
+  transition: var(--transition);
+  letter-spacing: 2px;
+}
+
+.alarm-time-input:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.15);
+}
+
+/* カラーピッカーのスタイル（Webkit用） */
+.alarm-time-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
+  cursor: pointer;
+}
+
+.alarm-panel-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.alarm-btn {
+  font-family: var(--font-family);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.alarm-btn:active {
+  transform: scale(0.96);
+}
+
+.alarm-btn-set {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+  color: white;
+  box-shadow: 0 4px 16px rgba(6, 182, 212, 0.3);
+}
+
+.alarm-btn-set:hover {
+  box-shadow: 0 6px 24px rgba(6, 182, 212, 0.4);
+  transform: translateY(-1px);
+}
+
+.alarm-btn-skip {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.alarm-btn-skip:hover {
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+/* --- 就寝中のアラーム状態表示 --- */
+.alarm-status {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.alarm-status-icon {
+  font-size: 1rem;
+  animation: alarm-tick 2s ease-in-out infinite;
+}
+
+.alarm-status-time {
+  font-size: 0.95rem;
+  color: var(--accent-cyan);
+  font-weight: 500;
+}
+
+.alarm-cancel-btn {
+  font-family: var(--font-family);
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  background: none;
+  border: 1px solid var(--text-muted);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.alarm-cancel-btn:hover {
+  border-color: var(--accent-pink);
+  color: var(--accent-pink);
+}
+
+/* --- アラーム発動オーバーレイ --- */
+.alarm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 182, 212, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: fadeIn 0.5s ease;
+}
+
+.alarm-overlay-content {
+  text-align: center;
+  animation: scaleIn 0.5s ease;
+}
+
+.alarm-ring-icon {
+  font-size: 5rem;
+  animation: alarm-shake 0.5s ease-in-out infinite;
+  margin-bottom: 16px;
+}
+
+.alarm-ring-time {
+  font-size: 4rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+
+.alarm-ring-message {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+.alarm-stop-btn {
+  font-family: var(--font-family);
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 18px 48px;
+  background: var(--gradient-wake);
+  color: white;
+  border: none;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4);
+  transition: var(--transition);
+}
+
+.alarm-stop-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(245, 158, 11, 0.5);
+}
+
+.alarm-stop-btn:active {
+  transform: scale(0.95);
+}
+
+@keyframes alarm-shake {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(15deg); }
+  40% { transform: rotate(-15deg); }
+  60% { transform: rotate(10deg); }
+  80% { transform: rotate(-10deg); }
+}
+
+@keyframes alarm-tick {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* ============================================
+   6. 統計カード
+   ============================================ */
+.stats-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  padding: 30px 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px 28px;
+  text-align: center;
+  min-width: 120px;
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  background: var(--gradient-sleep);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ============================================
+   7. 今日のアート
+   ============================================ */
+.today-art-section {
+  text-align: center;
+  padding: 30px 0;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.today-art-container {
+  display: inline-block;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(99, 102, 241, 0.1);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.today-art-container:hover {
+  transform: scale(1.02);
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(99, 102, 241, 0.15);
+}
+
+.today-art-container canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.today-sleep-info {
+  margin-top: 16px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+.today-sleep-info .sleep-duration {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent-blue);
+}
+
+/* ============================================
+   8. ギャラリー / カレンダー
+   ============================================ */
+.gallery-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0 30px;
+}
+
+.gallery-month {
+  font-size: 1.3rem;
+  font-weight: 500;
+  min-width: 160px;
+  text-align: center;
+}
+
+.month-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  font-family: var(--font-family);
+}
+
+.month-btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-blue);
+}
+
+.calendar-grid {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.calendar-header span {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 8px 0;
+}
+
+.calendar-body {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+/* カレンダーの各日 */
+.calendar-day {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.calendar-day.current-month {
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+}
+
+.calendar-day.today {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.2);
+}
+
+/* 睡眠データがある日はアートのサムネイルを表示 */
+.calendar-day.has-art {
+  cursor: pointer;
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.calendar-day.has-art:hover {
+  transform: scale(1.08);
+  z-index: 2;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.calendar-day canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-sm);
+}
+
+.calendar-day .day-number {
+  position: relative;
+  z-index: 1;
+  font-weight: 500;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  color: white;
+}
+
+.calendar-day.has-art .day-number {
+  color: white;
+}
+
+/* ============================================
+   9. 実績画面
+   ============================================ */
+.achievements-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 30px;
+  margin-top: -12px;
+}
+
+.achievements-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.achievement-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: var(--transition);
+  opacity: 0.5;
+}
+
+.achievement-card.unlocked {
+  opacity: 1;
+  border-color: rgba(99, 102, 241, 0.3);
+  background: linear-gradient(135deg, var(--bg-card), rgba(99, 102, 241, 0.05));
+}
+
+.achievement-card.unlocked:hover {
+  background: linear-gradient(135deg, var(--bg-card-hover), rgba(99, 102, 241, 0.1));
+  transform: translateY(-2px);
+}
+
+.achievement-icon {
+  font-size: 2rem;
+  min-width: 48px;
+  text-align: center;
+  filter: grayscale(100%);
+  transition: var(--transition);
+}
+
+.achievement-card.unlocked .achievement-icon {
+  filter: none;
+}
+
+.achievement-info {
+  flex: 1;
+}
+
+.achievement-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.achievement-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.achievement-card.unlocked .achievement-desc {
+  color: var(--accent-green);
+}
+
+/* ============================================
+   10. モーダル
+   ============================================ */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal.hidden {
+  display: none !important;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  position: relative;
+  z-index: 1;
+  max-width: 90vw;
+  max-height: 90vh;
+  text-align: center;
+  animation: scaleIn 0.3s ease;
+}
+
+.modal-content canvas {
+  display: block;
+  border-radius: var(--radius-lg);
+  max-width: 100%;
+  height: auto;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+
+.modal-close {
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  z-index: 2;
+}
+
+.modal-close:hover {
+  background: var(--accent-pink);
+  border-color: var(--accent-pink);
+}
+
+.modal-sleep-info {
+  margin-top: 16px;
+  padding: 16px 24px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+.modal-sleep-info strong {
+  color: var(--text-primary);
+}
+
+/* ============================================
+   11. トースト通知（実績解除時）
+   ============================================ */
+.achievement-toast {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 300;
+  background: linear-gradient(135deg, var(--bg-card), rgba(99, 102, 241, 0.1));
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: var(--radius-md);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  animation: slideInRight 0.5s ease, fadeOut 0.5s ease 3.5s forwards;
+}
+
+.toast-icon {
+  font-size: 2rem;
+  animation: bounce 0.6s ease 0.3s;
+}
+
+.toast-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--accent-amber);
+}
+
+.toast-message {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ============================================
+   12. アニメーション
+   ============================================ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(80px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+  }
+}
+
+/* ============================================
+   13. レスポンシブデザイン
+   ============================================ */
+
+/* タブレット */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 16px;
+  }
+
+  .nav-title {
+    font-size: 0.95rem;
+  }
+
+  .nav-btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+
+  .clock {
+    font-size: 3rem;
+  }
+
+  .btn {
+    width: 140px;
+    height: 140px;
+  }
+
+  .stat-card {
+    padding: 16px 20px;
+    min-width: 100px;
+  }
+
+  .stat-value {
+    font-size: 1.6rem;
+  }
+
+  .modal-content canvas {
+    max-width: 85vw;
+  }
+}
+
+/* スマートフォン */
+@media (max-width: 480px) {
+  .container {
+    padding: 70px 12px 30px;
+  }
+
+  .nav-brand .nav-title {
+    display: none;
+  }
+
+  .clock {
+    font-size: 2.5rem;
+  }
+
+  .sleep-buttons {
+    gap: 12px;
+  }
+
+  .btn {
+    width: 120px;
+    height: 120px;
+  }
+
+  .btn-icon {
+    font-size: 2rem;
+  }
+
+  .btn-text {
+    font-size: 1rem;
+  }
+
+  .stats-row {
+    gap: 8px;
+  }
+
+  .stat-card {
+    padding: 12px 16px;
+    min-width: 90px;
+  }
+
+  .achievements-list {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-month {
+    font-size: 1.1rem;
+    min-width: 120px;
+  }
+
+  .achievement-toast {
+    top: auto;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+  }
+
+  .alarm-time-input {
+    font-size: 1.8rem;
+    width: 150px;
+  }
+
+  .alarm-panel-buttons {
+    flex-direction: column;
+  }
+
+  .alarm-ring-time {
+    font-size: 3rem;
+  }
+
+  .alarm-ring-icon {
+    font-size: 4rem;
+  }
+}

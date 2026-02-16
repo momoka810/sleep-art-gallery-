@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sleep Art Gallery - 睡眠をアートに</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts: 美しい日本語フォント -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ========================================
+       ナビゲーションバー
+       ======================================== -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="nav-icon">🌙</span>
+      <span class="nav-title">Sleep Art Gallery</span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-btn active" data-view="home">ホーム</button>
+      <button class="nav-btn" data-view="gallery">ギャラリー</button>
+      <button class="nav-btn" data-view="achievements">実績</button>
+    </div>
+  </nav>
+
+  <!-- ========================================
+       メインコンテンツ
+       ======================================== -->
+  <main class="container">
+
+    <!-- ==================
+         ホーム画面
+         ================== -->
+    <section id="home-view" class="view active">
+
+      <!-- 現在の状態表示 -->
+      <div class="status-card">
+        <div id="clock" class="clock">00:00</div>
+        <p id="status-message" class="status-message">今日もお疲れさまでした</p>
+      </div>
+
+      <!-- 睡眠記録ボタン -->
+      <div class="sleep-buttons">
+        <button id="btn-sleep" class="btn btn-sleep">
+          <span class="btn-icon">🌙</span>
+          <span class="btn-text">おやすみ</span>
+          <span class="btn-sub">就寝を記録</span>
+        </button>
+        <button id="btn-wake" class="btn btn-wake" disabled>
+          <span class="btn-icon">☀️</span>
+          <span class="btn-text">おはよう</span>
+          <span class="btn-sub">起床を記録</span>
+        </button>
+      </div>
+
+      <!-- アラーム設定パネル（おやすみボタン押下で表示） -->
+      <div id="alarm-panel" class="alarm-panel hidden">
+        <div class="alarm-panel-inner">
+          <h3 class="alarm-panel-title">目覚ましを設定</h3>
+          <p class="alarm-panel-desc">起きたい時刻を設定できます</p>
+          <input type="time" id="alarm-time-input" class="alarm-time-input" value="07:00">
+          <div class="alarm-panel-buttons">
+            <button id="alarm-set-btn" class="alarm-btn alarm-btn-set">セットして寝る</button>
+            <button id="alarm-skip-btn" class="alarm-btn alarm-btn-skip">設定せずに寝る</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 就寝中の表示 -->
+      <div id="sleeping-info" class="sleeping-info hidden">
+        <p class="sleeping-label">就寝中...</p>
+        <p id="sleeping-since" class="sleeping-since"></p>
+        <p id="sleeping-elapsed" class="sleeping-elapsed"></p>
+        <div id="alarm-status" class="alarm-status hidden">
+          <span class="alarm-status-icon">⏰</span>
+          <span id="alarm-status-time" class="alarm-status-time"></span>
+          <button id="alarm-cancel-btn" class="alarm-cancel-btn">取消</button>
+        </div>
+      </div>
+
+      <!-- 今日のアート（起床後に表示） -->
+      <div id="today-art-section" class="today-art-section hidden">
+        <h2 class="section-title">今日のアート</h2>
+        <div class="today-art-container">
+          <canvas id="today-art-canvas" width="400" height="400"></canvas>
+        </div>
+        <div id="today-sleep-info" class="today-sleep-info"></div>
+      </div>
+
+      <!-- 統計情報 -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-streak">0</div>
+          <div class="stat-label">連続記録</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-label">総作品数</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-avg">-</div>
+          <div class="stat-label">平均睡眠</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================
+         ギャラリー画面
+         ================== -->
+    <section id="gallery-view" class="view">
+      <div class="gallery-header">
+        <button id="prev-month" class="month-btn">&lt;</button>
+        <h2 id="gallery-month" class="gallery-month"></h2>
+        <button id="next-month" class="month-btn">&gt;</button>
+      </div>
+      <div class="calendar-grid">
+        <div class="calendar-header">
+          <span>日</span><span>月</span><span>火</span><span>水</span>
+          <span>木</span><span>金</span><span>土</span>
+        </div>
+        <div id="calendar-body" class="calendar-body"></div>
+      </div>
+    </section>
+
+    <!-- ==================
+         実績画面
+         ================== -->
+    <section id="achievements-view" class="view">
+      <h2 class="section-title">実績</h2>
+      <p class="achievements-subtitle">睡眠を記録して実績を解除しよう！</p>
+      <div id="achievements-list" class="achievements-list"></div>
+    </section>
+  </main>
+
+  <!-- ========================================
+       アート詳細モーダル
+       ======================================== -->
+  <div id="art-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <canvas id="modal-art-canvas" width="600" height="600"></canvas>
+      <div id="modal-sleep-info" class="modal-sleep-info"></div>
+    </div>
+  </div>
+
+  <!-- ========================================
+       アラーム発動オーバーレイ（全画面で表示）
+       ======================================== -->
+  <div id="alarm-overlay" class="alarm-overlay hidden">
+    <div class="alarm-overlay-content">
+      <div class="alarm-ring-icon">⏰</div>
+      <div class="alarm-ring-time" id="alarm-ring-time">07:00</div>
+      <p class="alarm-ring-message">おはようございます！</p>
+      <button id="alarm-stop-btn" class="alarm-stop-btn">アラームを止める</button>
+    </div>
+  </div>
+
+  <!-- ========================================
+       実績解除通知
+       ======================================== -->
+  <div id="achievement-toast" class="achievement-toast hidden">
+    <div class="toast-icon">🏆</div>
+    <div class="toast-content">
+      <div class="toast-title">実績解除！</div>
+      <div id="toast-message" class="toast-message"></div>
+    </div>
+  </div>
+
+  <!-- JavaScriptファイルの読み込み（順番が重要） -->
+  <script src="js/storage.js"></script>
+  <script src="js/art-generator.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
