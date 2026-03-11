@@ -5,7 +5,9 @@
 
 ## デモ
 
-`sleep-art-gallery/index.html` をブラウザで開くだけで動作します（サーバー不要）。
+https://sleep-art-gallery-89oa.vercel.app/
+
+`sleep-art-gallery/index.html` をブラウザで開くだけでも動作します（サーバー不要）。
 
 ## 機能一覧
 
@@ -59,14 +61,13 @@
 ## ファイル構成
 
 ```
-8-4_sleep-art-gallery/
-  sleep-art-gallery/
-    index.html              # メインHTML
-    style.css               # スタイル（ダークテーマ・レスポンシブ対応）
-    js/
-      storage.js            # localStorage によるデータ管理
-      art-generator.js      # ジェネラティブアート生成エンジン
-      app.js                # アプリ制御・実績・アラーム機能
+sleep-art-gallery/
+  index.html              # メインHTML
+  style.css               # スタイル（ダークテーマ・レスポンシブ対応）
+  js/
+    storage.js            # localStorage によるデータ管理
+    art-generator.js      # ジェネラティブアート生成エンジン
+    app.js                # アプリ制御・実績・アラーム機能
 ```
 
 ## 使い方
@@ -81,3 +82,7 @@
 
 - データはブラウザの localStorage に保存されます（ブラウザのデータを消去すると記録も消えます）
 - 目覚まし機能はブラウザのタブを開いたままにする必要があります
+
+## 作者
+
+[ATELIER MOMO](https://momoka810.github.io/portfolio/)
